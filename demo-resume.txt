@@ -1,0 +1,74 @@
+JOHN DOE
+Software Engineer
+Email: john.doe@email.com
+Phone: (555) 123-4567
+Location: San Francisco, CA
+LinkedIn: linkedin.com/in/johndoe
+Website: johndoe.dev
+
+PROFESSIONAL SUMMARY
+Experienced software engineer with 5+ years developing scalable web applications and leading cross-functional teams. Passionate about creating efficient solutions and mentoring junior developers.
+
+PROFESSIONAL EXPERIENCE
+
+Senior Software Engineer
+TechCorp Inc. | January 2022 - Present
+• Led development of microservices architecture serving 1M+ users
+• Reduced system latency by 40% through performance optimization
+• Mentored team of 4 junior developers
+• Implemented CI/CD pipelines reducing deployment time by 60%
+
+Software Engineer
+StartupXYZ | June 2020 - December 2021
+• Built full-stack web applications using React and Node.js
+• Developed RESTful APIs and database schemas
+• Collaborated with designers to implement responsive UI designs
+• Participated in code reviews and agile development processes
+
+Junior Developer
+DevCorp | August 2019 - May 2020
+• Maintained legacy applications and fixed critical bugs
+• Assisted in migrating monolithic applications to microservices
+• Wrote unit tests achieving 85% code coverage
+
+EDUCATION
+
+Bachelor of Science in Computer Science
+University of California, Berkeley | 2019
+Graduated Magna Cum Laude
+Relevant coursework: Data Structures, Algorithms, Database Systems, Software Engineering
+
+TECHNICAL SKILLS
+
+Programming Languages: JavaScript, TypeScript, Python, Java, Go
+Frontend: React, Vue.js, Angular, HTML5, CSS3, Sass
+Backend: Node.js, Express, Django, Spring Boot
+Databases: PostgreSQL, MongoDB, Redis, MySQL
+Cloud: AWS, Docker, Kubernetes, Terraform
+Tools: Git, Jenkins, JIRA, Figma
+
+CERTIFICATIONS
+
+AWS Certified Solutions Architect
+Amazon Web Services | March 2023
+
+Google Cloud Professional Developer
+Google Cloud Platform | September 2022
+
+PROJECTS
+
+E-Commerce Platform
+• Built scalable e-commerce platform handling 10K+ daily transactions
+• Technologies: React, Node.js, PostgreSQL, Docker
+• Link: github.com/johndoe/ecommerce
+
+Task Management App
+• Developed team collaboration tool with real-time features
+• Technologies: Vue.js, Socket.io, MongoDB
+• Link: taskmanager.johndoe.dev
+
+LANGUAGES
+
+English - Native
+Spanish - Conversational
+French - Beginner

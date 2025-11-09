@@ -13,6 +13,8 @@ import { CheckCircle, Brain, ArrowRight, Eye } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import ComingSoon from './ComingSoon';
+import { ParsedResumeData } from '../services/resumeParser';
 
 // Sample resume data for template previews
 const sampleResumeData: ResumeData = {
@@ -281,6 +283,47 @@ const templates: Template[] = [
     description: 'Ultra-clean design for senior professionals',
     colors: ['#374151', '#6B7280', '#9CA3AF'],
     fontFamily: 'serif'
+  },
+  // New templates based on provided designs
+  {
+    id: 'taylor-cook-classic',
+    name: 'Taylor Cook Classic',
+    category: 'traditional',
+    description: 'Clean traditional layout with clear sections and professional typography',
+    colors: ['#2C3E50', '#34495E', '#7F8C8D'],
+    fontFamily: 'serif'
+  },
+  {
+    id: 'wes-turner-sales',
+    name: 'Wes Turner Sales',
+    category: 'modern',
+    description: 'Modern layout with skill ratings perfect for sales professionals',
+    colors: ['#E74C3C', '#3498DB', '#34495E'],
+    fontFamily: 'sans'
+  },
+  {
+    id: 'herman-walton-photo',
+    name: 'Herman Walton Photo',
+    category: 'executive',
+    description: 'Professional executive template with photo placement and clean sections',
+    colors: ['#2980B9', '#34495E', '#95A5A6'],
+    fontFamily: 'sans'
+  },
+  {
+    id: 'taylor-greene-modern',
+    name: 'Taylor Greene Modern',
+    category: 'modern',
+    description: 'Clean modern design perfect for technology executives and CTOs',
+    colors: ['#3498DB', '#2C3E50', '#7F8C8D'],
+    fontFamily: 'sans'
+  },
+  {
+    id: 'programmer-minimal',
+    name: 'Programmer Minimal',
+    category: 'ats',
+    description: 'Minimal ATS-friendly template perfect for programmers and developers',
+    colors: ['#2C3E50', '#34495E', '#95A5A6'],
+    fontFamily: 'sans'
   },
   // Additional 20 professional templates
   {
@@ -898,6 +941,7 @@ export default function ResumeBuilder() {
   const [showPreview, setShowPreview] = useState(true);
   const [showATSScore, setShowATSScore] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const { toast } = useToast();
 
   const currentTemplate = templates.find(t => t.id === selectedTemplate) || templates[0];
@@ -929,6 +973,14 @@ export default function ResumeBuilder() {
       title: "Back to Template Selection",
       description: "Choose a different template for your resume.",
     });
+  };
+
+  const handleImportResume = () => {
+    setShowComingSoon(true);
+  };
+
+  const handleComingSoonClose = () => {
+    setShowComingSoon(false);
   };
 
   const handleExportPDF = async () => {
@@ -1328,6 +1380,7 @@ export default function ResumeBuilder() {
         onATSToggle={handleATSToggle}
         onTemplatesToggle={handleTemplatesToggle}
         onBackToTemplateSelection={handleBackToTemplateSelection}
+        onImportResume={handleImportResume}
         showPreview={showPreview}
         showATSScore={showATSScore}
         showTemplates={showTemplates}
@@ -1366,6 +1419,12 @@ export default function ResumeBuilder() {
           </div>
         )}
       </div>
+      
+      {/* Coming Soon Modal */}
+      <ComingSoon
+        isOpen={showComingSoon}
+        onClose={handleComingSoonClose}
+      />
     </div>
   );
 }

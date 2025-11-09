@@ -667,6 +667,563 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
     );
   }
 
+  // Taylor Cook Classic Template
+  if (template.id === 'taylor-cook-classic') {
+    const sectionOrder = data.sectionOrder || ['personal', 'experience', 'education', 'skills', 'certifications', 'projects', 'languages'];
+    
+    return (
+      <Card className="resume-preview p-4 md:p-8 max-w-2xl mx-auto bg-white text-black" data-testid="resume-preview">
+        <div className={`${fontClass} leading-relaxed`}>
+          {/* Header */}
+          <div className="text-left mb-8 pb-4 border-b-2" style={{ borderColor: colors.primary }}>
+            <h1 className="text-3xl font-bold mb-1" style={{ color: colors.primary }}>
+              {data.personalInfo.fullName || 'TAYLOR COOK'}
+            </h1>
+            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              {data.experience[0]?.title || 'Programmer'}
+            </p>
+          </div>
+
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Left Sidebar */}
+            <div className="md:col-span-1 space-y-6">
+              {/* Details */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                  DETAILS
+                </h2>
+                <div className="text-sm space-y-2 text-gray-700">
+                  <div>
+                    <p className="font-medium">ADDRESS</p>
+                    <p>{data.personalInfo.location || '123 Main Street, City, State 12345'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">PHONE</p>
+                    <p>{data.personalInfo.phone || '(555) 555-5555'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">EMAIL</p>
+                    <p>{data.personalInfo.email || 'taylor@example.com'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">NATIONALITY</p>
+                    <p>American</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Skills */}
+              {data.skills.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                    SKILLS
+                  </h2>
+                  <div className="space-y-2">
+                    {data.skills.map((skill, index) => (
+                      <div key={index} className="text-sm text-gray-700">
+                        <div className="font-medium">{skill}</div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                          <div className="bg-gray-800 h-2 rounded-full" style={{ width: '80%' }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Languages */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                  LANGUAGES
+                </h2>
+                <div className="space-y-1 text-sm text-gray-700">
+                  <div className="flex justify-between">
+                    <span>English</span>
+                    <span>Native</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>French</span>
+                    <span>Conversational</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="md:col-span-2 space-y-6">
+              {/* Profile/Summary */}
+              {data.personalInfo.summary && (
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                    PROFILE
+                  </h2>
+                  <div className="text-sm leading-relaxed text-gray-700" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(data.personalInfo.summary) }}></div>
+                </div>
+              )}
+
+              {/* Employment History */}
+              {data.experience.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                    EMPLOYMENT HISTORY
+                  </h2>
+                  {data.experience.map((exp) => (
+                    <div key={exp.id} className="mb-4">
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <p className="font-semibold text-sm">{exp.title}, {exp.company}</p>
+                          <p className="text-sm text-gray-600">{exp.duration}</p>
+                        </div>
+                        <span className="text-xs text-gray-500">{exp.duration.split(' - ')[1] || 'Present'}</span>
+                      </div>
+                      <div className="text-sm leading-relaxed text-gray-700 mt-2" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(exp.description) }}></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Education */}
+              {data.education.length > 0 && (
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                    EDUCATION
+                  </h2>
+                  {data.education.map((edu) => (
+                    <div key={edu.id} className="mb-3">
+                      <h3 className="font-semibold text-sm">{edu.degree}</h3>
+                      <p className="text-sm text-gray-600">{edu.school}</p>
+                      <p className="text-xs text-gray-500">{edu.year}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Wes Turner Sales Template
+  if (template.id === 'wes-turner-sales') {
+    return (
+      <Card className="resume-preview p-4 md:p-8 max-w-2xl mx-auto bg-white text-black" data-testid="resume-preview">
+        <div className={`${fontClass} leading-relaxed`}>
+          {/* Header with border */}
+          <div className="border-4 border-black p-6 mb-8 text-center">
+            <h1 className="text-2xl font-bold mb-2">
+              {data.personalInfo.fullName || 'WES TURNER'}
+            </h1>
+            <p className="text-lg font-medium text-gray-700">
+              {data.experience[0]?.title || 'SALES MANAGER'}
+            </p>
+          </div>
+
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Left Sidebar */}
+            <div className="md:col-span-1 space-y-6">
+              {/* Details */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3">
+                  DETAILS
+                </h2>
+                <div className="text-sm space-y-2 text-gray-700">
+                  <div>
+                    <p className="font-medium">ADDRESS</p>
+                    <p>{data.personalInfo.location || '123 Any Lane, Any City, United States'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">PHONE</p>
+                    <p>{data.personalInfo.phone || '555 123 4567'}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">EMAIL</p>
+                    <p>{data.personalInfo.email || 'hello@westurner.com'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Skills with ratings */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3">
+                  SKILLS
+                </h2>
+                <div className="space-y-3">
+                  {(data.skills.length > 0 ? data.skills : ['Sales Management', 'Team Leadership', 'Customer Relations', 'Strategic Planning', 'Business Development']).slice(0, 5).map((skill, index) => (
+                    <div key={index} className="text-sm">
+                      <div className="font-medium mb-1">{skill}</div>
+                      <div className="flex space-x-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <div key={star} className={`w-3 h-3 ${star <= 4 ? 'bg-black' : 'bg-gray-300'}`} style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}></div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="md:col-span-2 space-y-6">
+              {/* Profile */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3">
+                  PROFILE
+                </h2>
+                <div className="text-sm leading-relaxed text-gray-700">
+                  {data.personalInfo.summary || 'Experienced and self-motivated Sales Manager with five years of industry experience representing leading retail brands. Looking to bring my passion to the next level.'}
+                </div>
+              </div>
+
+              {/* Employment History */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3">
+                  EMPLOYMENT HISTORY
+                </h2>
+                {(data.experience.length > 0 ? data.experience : [
+                  {
+                    id: '1',
+                    title: 'Sales Manager',
+                    company: 'Northrop and Lola',
+                    duration: 'Jan 2018 - Present',
+                    description: 'Led a team of 15 sales representatives. Increased team revenue by 25% year over year. Developed and implemented sales strategies that resulted in 30% growth in new customer acquisition.'
+                  }
+                ]).map((exp) => (
+                  <div key={exp.id} className="mb-4">
+                    <div className="flex justify-between items-start mb-1">
+                      <div>
+                        <p className="font-semibold text-sm">{exp.title}, {exp.company}</p>
+                        <p className="text-xs text-gray-500">{exp.duration}</p>
+                      </div>
+                    </div>
+                    <div className="text-sm leading-relaxed text-gray-700 mt-2">
+                      {typeof exp.description === 'string' ? exp.description : 'Sales experience description...'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Education */}
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3">
+                  EDUCATION
+                </h2>
+                {(data.education.length > 0 ? data.education : [
+                  {
+                    id: '1',
+                    degree: 'Bachelor of Marketing',
+                    school: 'Colorado College',
+                    year: 'May 2009 - May 2013'
+                  }
+                ]).map((edu) => (
+                  <div key={edu.id} className="mb-3">
+                    <h3 className="font-semibold text-sm">{edu.degree}</h3>
+                    <p className="text-sm text-gray-600">{edu.school}</p>
+                    <p className="text-xs text-gray-500">{edu.year}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Herman Walton Photo Template
+  if (template.id === 'herman-walton-photo') {
+    return (
+      <Card className="resume-preview p-4 md:p-8 max-w-2xl mx-auto bg-white text-black" data-testid="resume-preview">
+        <div className={`${fontClass} leading-relaxed`}>
+          {/* Header with photo */}
+          <div className="flex items-start gap-6 mb-8 pb-6 border-b-2" style={{ borderColor: colors.primary }}>
+            <div className="flex-shrink-0">
+              {data.personalInfo.photo ? (
+                <img 
+                  src={data.personalInfo.photo} 
+                  alt="Profile" 
+                  className="w-20 h-20 rounded object-cover border-2"
+                  style={{ borderColor: colors.primary }}
+                />
+              ) : (
+                <div className="w-20 h-20 bg-gray-200 rounded border-2 flex items-center justify-center text-xs text-gray-500" style={{ borderColor: colors.primary }}>
+                  Photo
+                </div>
+              )}
+            </div>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold mb-2" style={{ color: colors.primary }}>
+                {data.personalInfo.fullName || 'HERMAN WALTON'}
+              </h1>
+              <p className="text-sm font-medium text-gray-600 uppercase tracking-wide mb-3">
+                {data.experience[0]?.title || 'FINANCIAL ANALYST'}
+              </p>
+              <div className="text-sm text-gray-700 space-y-1">
+                <p>{data.personalInfo.location || 'Current Street 123, New York, USA'}</p>
+                <p>{data.personalInfo.phone || '(412) 478-4562'} • {data.personalInfo.email || 'example@gmail.com'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary */}
+          {data.personalInfo.summary && (
+            <div className="mb-6">
+              <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                SUMMARY
+              </h2>
+              <div className="text-sm leading-relaxed text-gray-700" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(data.personalInfo.summary) }}></div>
+            </div>
+          )}
+
+          {/* Professional Experience */}
+          {data.experience.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                PROFESSIONAL EXPERIENCE
+              </h2>
+              {data.experience.map((exp) => (
+                <div key={exp.id} className="mb-6">
+                  <div className="flex justify-between items-start mb-1">
+                    <div>
+                      <p className="font-semibold">{exp.title}</p>
+                      <p className="text-sm" style={{ color: colors.secondary }}>{exp.company}</p>
+                    </div>
+                    <span className="text-sm font-medium" style={{ color: colors.primary }}>
+                      {exp.duration}
+                    </span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-gray-700 mt-2" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(exp.description) }}></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Two-column layout for education and skills */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Education */}
+            {data.education.length > 0 && (
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                  EDUCATION
+                </h2>
+                {data.education.map((edu) => (
+                  <div key={edu.id} className="mb-4">
+                    <h3 className="font-semibold text-sm">{edu.degree}</h3>
+                    <p className="text-sm" style={{ color: colors.secondary }}>{edu.school}</p>
+                    <p className="text-xs text-gray-500">{edu.year}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Technical Skills */}
+            {data.skills.length > 0 && (
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+                  TECHNICAL SKILLS
+                </h2>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700">
+                  {data.skills.map((skill, index) => (
+                    <div key={index}>• {skill}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Additional Information */}
+          <div className="mt-6 pt-4 border-t">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: colors.primary }}>
+              ADDITIONAL INFORMATION
+            </h2>
+            <div className="text-sm text-gray-700">
+              <p><strong>Languages:</strong> English, French</p>
+              <p><strong>Awards/Activities:</strong> Most Involved Employee of the Year (2011), Overall Best Employee Division Two (2009)</p>
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Taylor Greene Modern Template
+  if (template.id === 'taylor-greene-modern') {
+    return (
+      <Card className="resume-preview p-4 md:p-8 max-w-2xl mx-auto bg-white text-black" data-testid="resume-preview">
+        <div className={`${fontClass} leading-relaxed`}>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-light mb-2" style={{ color: colors.primary }}>
+              {data.personalInfo.fullName || 'Taylor Greene'}
+            </h1>
+            <p className="text-lg text-gray-600 mb-4">
+              {data.experience[0]?.title || 'Chief Technology Officer'}
+            </p>
+            <div className="text-sm text-gray-600">
+              <p>{data.personalInfo.email || 'taylor.greene@example.com'} • {data.personalInfo.phone || '(555) 456-7890'}</p>
+              <p>{data.personalInfo.location || 'Oklahoma City, OK, United States'}</p>
+            </div>
+          </div>
+
+          {/* Summary */}
+          {data.personalInfo.summary && (
+            <div className="mb-8">
+              <div className="text-sm leading-relaxed text-gray-700" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(data.personalInfo.summary) }}></div>
+            </div>
+          )}
+
+          {/* Professional Experience */}
+          {data.experience.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-4" style={{ color: colors.primary }}>
+                Professional Experience
+              </h2>
+              {data.experience.map((exp) => (
+                <div key={exp.id} className="mb-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="font-semibold text-lg">{exp.title}</h3>
+                      <p className="text-sm" style={{ color: colors.secondary }}>{exp.company}</p>
+                    </div>
+                    <span className="text-sm font-medium" style={{ color: colors.primary }}>
+                      {exp.duration}
+                    </span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-gray-700" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(exp.description) }}></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Education */}
+          {data.education.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-4" style={{ color: colors.primary }}>
+                Education
+              </h2>
+              {data.education.map((edu) => (
+                <div key={edu.id} className="mb-3">
+                  <h3 className="font-semibold">{edu.degree}</h3>
+                  <p className="text-sm" style={{ color: colors.secondary }}>{edu.school}</p>
+                  <p className="text-xs text-gray-500">{edu.year}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Areas of Expertise */}
+          {data.skills.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold mb-4" style={{ color: colors.primary }}>
+                Areas of Expertise
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-2 text-sm text-gray-700">
+                {data.skills.map((skill, index) => (
+                  <div key={index}>• {skill}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+    );
+  }
+
+  // Programmer Minimal Template (ATS-friendly)
+  if (template.id === 'programmer-minimal') {
+    const sectionOrder = data.sectionOrder || ['personal', 'experience', 'education', 'skills', 'certifications', 'projects', 'languages'];
+    
+    return (
+      <Card className="resume-preview p-4 md:p-8 max-w-2xl mx-auto bg-white text-black" data-testid="resume-preview">
+        <div className={`${fontClass} leading-relaxed`}>
+          {/* Header */}
+          <div className="text-left mb-8 pb-4 border-b" style={{ borderColor: colors.primary }}>
+            <h1 className="text-2xl font-bold mb-1">
+              {data.personalInfo.fullName || 'Your Name'}
+            </h1>
+            <p className="text-sm text-gray-600 mb-3">
+              {data.experience[0]?.title || 'Programmer'}
+            </p>
+            <div className="text-sm text-gray-700">
+              <p>{data.personalInfo.email || 'email@example.com'} • {data.personalInfo.phone || '(555) 123-4567'}</p>
+              <p>{data.personalInfo.location || 'City, State'}</p>
+            </div>
+          </div>
+
+          {/* Summary */}
+          {data.personalInfo.summary && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3" style={{ color: colors.primary }}>
+                Professional Summary
+              </h2>
+              <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(data.personalInfo.summary) }}></div>
+            </div>
+          )}
+
+          {/* Experience */}
+          {data.experience.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3" style={{ color: colors.primary }}>
+                Professional Experience
+              </h2>
+              {data.experience.map((exp) => (
+                <div key={exp.id} className="mb-4">
+                  <div className="flex justify-between items-start mb-1">
+                    <div>
+                      <h3 className="font-semibold">{exp.title}</h3>
+                      <p className="text-sm font-medium">{exp.company}</p>
+                    </div>
+                    <span className="text-sm text-gray-600">{exp.duration}</span>
+                  </div>
+                  <div className="text-sm leading-relaxed mt-2" dangerouslySetInnerHTML={{ __html: sanitizeAndCleanHTML(exp.description) }}></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Education */}
+          {data.education.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3" style={{ color: colors.primary }}>
+                Education
+              </h2>
+              {data.education.map((edu) => (
+                <div key={edu.id} className="mb-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">{edu.degree}</h3>
+                      <p className="text-sm text-gray-600">{edu.school}</p>
+                    </div>
+                    <span className="text-sm text-gray-600">{edu.year}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Skills */}
+          {data.skills.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3" style={{ color: colors.primary }}>
+                Technical Skills
+              </h2>
+              <div className="text-sm leading-relaxed">
+                {data.skills.join(' • ')}
+              </div>
+            </div>
+          )}
+
+          {/* Additional sections */}
+          {sectionOrder.filter(id => !['personal', 'experience', 'education', 'skills'].includes(id)).map(sectionId => (
+            <div key={sectionId}>{renderSection(sectionId, true, false)}</div>
+          ))}
+        </div>
+      </Card>
+    );
+  }
+
   // Minimal Sidebar Template
   if (template.id === 'minimal-sidebar') {
     const sectionOrder = data.sectionOrder || ['personal', 'experience', 'education', 'skills', 'certifications', 'projects', 'languages'];
