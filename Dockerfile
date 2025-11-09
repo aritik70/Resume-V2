@@ -1,0 +1,55 @@
+# Multi-stage build for Resume Builder Application
+# Stage 1: Build stage - Install dependencies and build application
+FROM node:20-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files for better Docker layer caching
+COPY package.json package-lock.json ./
+
+# Install all dependencies (including devDependencies for build)
+RUN npm ci --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build both frontend and backend
+# This runs: vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+RUN npm run build
+
+# Stage 2: Production stage - Create minimal runtime image
+FROM node:20-alpine AS production
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install only production dependencies
+RUN npm ci --omit=dev --frozen-lockfile && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Copy any additional required files (like shared schemas if needed)
+COPY --from=builder /app/shared ./shared
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node -e "const http=require('http');const req=http.request({hostname:'localhost',port:5000,path:'/'},res=>{process.exit(res.statusCode===200?0:1)});req.on('error',()=>process.exit(1));req.end();"
+
+# Set production environment
+ENV NODE_ENV=production
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+# Start the application
+CMD ["npm", "start"]

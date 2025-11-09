@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Debug Helper</title>
+    <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-content {
+            background: white;
+            padding: 40px;
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+        }
+        
+        h1, h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .button:hover {
+            background: #0056b3;
+        }
+        
+        ul, ol {
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+        
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Export Debug Helper</h1>
+    
+    <div class="controls">
+        <button class="button" onclick="testBasicCanvas()">Test Basic Canvas</button>
+        <button class="button" onclick="testWithElements()">Test With Resume Elements</button>
+        <button class="button" onclick="testPDFGeneration()">Test Full PDF Generation</button>
+        <button class="button" onclick="clearLogs()">Clear Logs</button>
+    </div>
+    
+    <div class="test-content" data-testid="resume-preview">
+        <div class="test-section">
+            <h1>John Doe</h1>
+            <p>Software Engineer | john.doe@example.com | (555) 123-4567</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Experience</h2>
+            <div class="mb-4">
+                <h3>Senior Software Engineer</h3>
+                <p><strong>Tech Company Inc.</strong> | Jan 2020 - Present</p>
+                <ul>
+                    <li>Developed web applications using React and Node.js</li>
+                    <li>Led a team of 5 developers</li>
+                    <li>Improved system performance by 40%</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Education</h2>
+            <div class="mb-4">
+                <h3>Bachelor of Computer Science</h3>
+                <p><strong>University of Technology</strong> | 2016 - 2020</p>
+                <ol>
+                    <li>Graduated Magna Cum Laude</li>
+                    <li>Relevant Coursework: Data Structures, Algorithms, Web Development</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Skills</h2>
+            <ul>
+                <li>JavaScript, TypeScript, React</li>
+                <li>Node.js, Python, Java</li>
+                <li>SQL, MongoDB, PostgreSQL</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="logs" class="log"></div>
+    
+    <script>
+        function log(message) {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logs.textContent += `[${timestamp}] ${message}\n`;
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').textContent = '';
+        }
+        
+        async function testBasicCanvas() {
+            log('=== Testing Basic Canvas ===');
+            
+            const element = document.querySelector('[data-testid="resume-preview"]');
+            if (!element) {
+                log('ERROR: Resume preview element not found');
+                return;
+            }
+            
+            log(`Element dimensions: ${element.offsetWidth}x${element.offsetHeight}`);
+            log(`Element styles: display=${getComputedStyle(element).display}, visibility=${getComputedStyle(element).visibility}`);
+            
+            try {
+                log('Starting html2canvas...');
+                const canvas = await html2canvas(element, {
+                    scale: 1,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: true
+                });
+                
+                log(`Canvas created: ${canvas.width}x${canvas.height}`);
+                log(`Canvas data URL length: ${canvas.toDataURL().length}`);
+                
+                // Show a preview of the canvas
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                img.style.maxWidth = '300px';
+                img.style.border = '1px solid #ccc';
+                img.style.margin = '10px 0';
+                
+                const preview = document.getElementById('logs');
+                preview.appendChild(document.createElement('br'));
+                preview.appendChild(img);
+                
+                log('SUCCESS: Basic canvas test completed');
+                
+            } catch (error) {
+                log(`ERROR: html2canvas failed - ${error.message}`);
+                console.error(error);
+            }
+        }
+        
+        async function testWithElements() {
+            log('=== Testing With Resume Elements ===');
+            
+            const element = document.querySelector('[data-testid="resume-preview"]');
+            if (!element) {
+                log('ERROR: Resume preview element not found');
+                return;
+            }
+            
+            try {
+                log('Adding PDF export styles...');
+                element.classList.add('pdf-export-mode');
+                
+                // Wait a bit for styles to apply
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                log('Starting html2canvas with resume-specific settings...');
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: true,
+                    letterRendering: true,
+                    foreignObjectRendering: false,
+                    imageTimeout: 15000,
+                    removeContainer: true,
+                    onclone: (clonedDoc) => {
+                        log('Cloning document...');
+                        const clonedElement = clonedDoc.querySelector('[data-testid="resume-preview"]');
+                        if (clonedElement) {
+                            clonedElement.classList.add('pdf-export-mode');
+                            
+                            // Apply list styles
+                            const lists = clonedElement.querySelectorAll('ol, ul');
+                            lists.forEach((list) => {
+                                if (list.tagName === 'OL') {
+                                    list.style.listStyleType = 'decimal';
+                                    list.style.listStylePosition = 'outside';
+                                    list.style.paddingLeft = '1.5em';
+                                } else if (list.tagName === 'UL') {
+                                    list.style.listStyleType = 'disc';
+                                    list.style.listStylePosition = 'outside';
+                                    list.style.paddingLeft = '1.5em';
+                                }
+                            });
+                            
+                            const listItems = clonedElement.querySelectorAll('li');
+                            listItems.forEach(li => {
+                                li.style.display = 'list-item';
+                                li.style.listStyle = 'inherit';
+                                li.style.margin = '0.25em 0';
+                            });
+                        }
+                    }
+                });
+                
+                element.classList.remove('pdf-export-mode');
+                
+                log(`Canvas created: ${canvas.width}x${canvas.height}`);
+                log(`Canvas has content: ${canvas.width > 0 && canvas.height > 0}`);
+                
+                if (canvas.width === 0 || canvas.height === 0) {
+                    log('ERROR: Canvas has zero dimensions');
+                    return;
+                }
+                
+                log('SUCCESS: Resume elements canvas test completed');
+                
+            } catch (error) {
+                element.classList.remove('pdf-export-mode');
+                log(`ERROR: Resume elements test failed - ${error.message}`);
+                console.error(error);
+            }
+        }
+        
+        async function testPDFGeneration() {
+            log('=== Testing Full PDF Generation ===');
+            
+            const element = document.querySelector('[data-testid="resume-preview"]');
+            if (!element) {
+                log('ERROR: Resume preview element not found');
+                return;
+            }
+            
+            try {
+                log('Starting full PDF generation test...');
+                element.classList.add('pdf-export-mode');
+                
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: true,
+                    letterRendering: true,
+                    foreignObjectRendering: false,
+                    imageTimeout: 15000,
+                    removeContainer: true
+                });
+                
+                element.classList.remove('pdf-export-mode');
+                
+                log(`Canvas: ${canvas.width}x${canvas.height}`);
+                
+                if (canvas.width === 0 || canvas.height === 0) {
+                    log('ERROR: Canvas has zero dimensions');
+                    return;
+                }
+                
+                log('Creating PDF document...');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const marginTop = 10;
+                const marginLeft = 10;
+                const marginRight = 10;
+                const contentWidth = pdfWidth - marginLeft - marginRight;
+                
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const widthRatio = contentWidth / imgWidth;
+                const scaledHeight = imgHeight * widthRatio;
+                
+                log(`PDF dimensions: ${pdfWidth}x${pdfHeight}mm`);
+                log(`Content dimensions: ${contentWidth}mm wide`);
+                log(`Scaled height: ${scaledHeight}mm`);
+                
+                const imgData = canvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'PNG', marginLeft, marginTop, contentWidth, scaledHeight);
+                
+                log('Saving PDF...');
+                pdf.save('debug-test-resume.pdf');
+                
+                log('SUCCESS: Full PDF generation completed');
+                
+            } catch (error) {
+                element.classList.remove('pdf-export-mode');
+                log(`ERROR: Full PDF generation failed - ${error.message}`);
+                console.error(error);
+            }
+        }
+        
+        // Add CSS for pdf-export-mode
+        const style = document.createElement('style');
+        style.textContent = `
+            .pdf-export-mode {
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            
+            .pdf-export-mode * {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+            }
+            
+            .pdf-export-mode ol,
+            .pdf-export-mode ul {
+                list-style-type: decimal !important;
+                list-style-position: outside !important;
+                padding-left: 1.5em !important;
+            }
+            
+            .pdf-export-mode ul {
+                list-style-type: disc !important;
+            }
+            
+            .pdf-export-mode li {
+                display: list-item !important;
+                list-style: inherit !important;
+                margin: 0.25em 0 !important;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        log('Debug helper loaded. Click buttons above to test different aspects of PDF generation.');
+    </script>
+</body>
+</html>
