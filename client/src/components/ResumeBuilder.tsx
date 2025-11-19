@@ -4,6 +4,7 @@ import TemplateSelector, { Template } from "./TemplateSelector";
 import ResumeForm, { ResumeData } from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
 import ATSScore from "./ATSScore";
+import EmailDialog from "./EmailDialog";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -942,6 +943,7 @@ export default function ResumeBuilder() {
   const [showATSScore, setShowATSScore] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
   const { toast } = useToast();
 
   const currentTemplate = templates.find(t => t.id === selectedTemplate) || templates[0];
@@ -981,6 +983,35 @@ export default function ResumeBuilder() {
 
   const handleComingSoonClose = () => {
     setShowComingSoon(false);
+  };
+
+  const handleDownloadClick = () => {
+    // Show email dialog before downloading
+    setShowEmailDialog(true);
+  };
+
+  const handleEmailSubmit = async (email: string) => {
+    try {
+      // Log the download with email and IP
+      await fetch('/api/log-download', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      // Close dialog and proceed with download
+      setShowEmailDialog(false);
+      
+      // Proceed with PDF export
+      await handleExportPDF();
+    } catch (error) {
+      console.error('Error logging download:', error);
+      // Still allow download even if logging fails
+      setShowEmailDialog(false);
+      await handleExportPDF();
+    }
   };
 
   const handleExportPDF = async () => {
@@ -1376,7 +1407,7 @@ export default function ResumeBuilder() {
       <StepIndicator currentStep={currentStep} />
       <Header 
         onPreviewToggle={handlePreviewToggle}
-        onExportPDF={handleExportPDF}
+        onExportPDF={handleDownloadClick}
         onATSToggle={handleATSToggle}
         onTemplatesToggle={handleTemplatesToggle}
         onBackToTemplateSelection={handleBackToTemplateSelection}
@@ -1424,6 +1455,13 @@ export default function ResumeBuilder() {
       <ComingSoon
         isOpen={showComingSoon}
         onClose={handleComingSoonClose}
+      />
+      
+      {/* Email Dialog */}
+      <EmailDialog
+        open={showEmailDialog}
+        onOpenChange={setShowEmailDialog}
+        onSubmit={handleEmailSubmit}
       />
     </div>
   );

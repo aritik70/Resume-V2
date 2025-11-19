@@ -2,6 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import mammoth from "mammoth";
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -12,6 +18,29 @@ const upload = multer({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
+
+  // Download logging endpoint
+  app.post('/api/log-download', async (req, res) => {
+    try {
+      const { email } = req.body;
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+      const timestamp = new Date().toISOString();
+      
+      // Create log entry
+      const logEntry = `${timestamp} | Email: ${email} | IP: ${ip}\n`;
+      
+      // Path to downloads log file (in server directory, not accessible via web)
+      const logFilePath = path.join(__dirname, 'downloads.txt');
+      
+      // Append to file (creates file if it doesn't exist)
+      await fs.appendFile(logFilePath, logEntry, 'utf-8');
+      
+      res.json({ success: true, message: 'Download logged successfully' });
+    } catch (error) {
+      console.error('Error logging download:', error);
+      res.status(500).json({ error: 'Failed to log download' });
+    }
+  });
 
   // PDF/Document parsing endpoint
   app.post('/api/parse-resume', upload.single('file'), async (req, res) => {
